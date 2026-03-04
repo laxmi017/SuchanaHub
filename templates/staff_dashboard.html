@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Dashboard - SUCHANA HUB{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Staff Dashboard</h1>
+    <p class="subtitle">Welcome, Staff! Help manage attendance and student records.</p>
+
+    <!-- Quick Stats -->
+    <div class="stats-container">
+        <div class="stat-card stat-primary">
+            <div class="stat-icon">👥</div>
+            <h3>Total Students</h3>
+            <p class="stat-number">{{ stats.total_students or 0 }}</p>
+        </div>
+        <div class="stat-card stat-success">
+            <div class="stat-icon">📊</div>
+            <h3>Attendance Records</h3>
+            <p class="stat-number">{{ stats.total_attendance or 0 }}</p>
+        </div>
+        <div class="stat-card stat-info">
+            <div class="stat-icon">🔔</div>
+            <h3>Notifications Sent</h3>
+            <p class="stat-number">{{ stats.total_notifications or 0 }}</p>
+        </div>
+        <div class="stat-card stat-warning">
+            <div class="stat-icon">💬</div>
+            <h3>Feedback Records</h3>
+            <p class="stat-number">{{ stats.total_feedback or 0 }}</p>
+        </div>
+    </div>
+
+    <!-- Staff Functions -->
+    <section class="dashboard-section">
+        <h2>My Functions</h2>
+        <div class="menu-grid">
+            <!-- Student Management -->
+            <div class="menu-card">
+                <div class="card-icon">🎓</div>
+                <h3>View Students</h3>
+                <p>View and manage student records</p>
+                <a href="{{ url_for('view_students') }}" class="btn btn-secondary">View Students</a>
+            </div>
+
+            <!-- Upload Attendance -->
+            <div class="menu-card">
+                <div class="card-icon">📤</div>
+                <h3>Upload Attendance</h3>
+                <p>Upload biometric attendance data (CSV/Excel)</p>
+                <a href="{{ url_for('attendance_upload') }}" class="btn btn-secondary">Upload Attendance</a>
+            </div>
+
+            <!-- View Attendance -->
+            <div class="menu-card">
+                <div class="card-icon">📋</div>
+                <h3>View Attendance</h3>
+                <p>Check and manage attendance records</p>
+                <a href="{{ url_for('view_attendance') }}" class="btn btn-secondary">View Records</a>
+            </div>
+
+            <!-- Notifications -->
+            <div class="menu-card">
+                <div class="card-icon">🔔</div>
+                <h3>Notification Logs</h3>
+                <p>View all notifications sent to guardians</p>
+                <a href="{{ url_for('view_notifications') }}" class="btn btn-secondary">View Logs</a>
+            </div>
+
+            <!-- Reports -->
+            <div class="menu-card">
+                <div class="card-icon">📊</div>
+                <h3>Reports</h3>
+                <p>Generate and view system reports</p>
+                <a href="{{ url_for('view_reports') }}" class="btn btn-secondary">View Reports</a>
+            </div>
+
+            <!-- Settings -->
+            <div class="menu-card">
+                <div class="card-icon">⚙️</div>
+                <h3>My Settings</h3>
+                <p>Update your profile and preferences</p>
+                <a href="{{ url_for('settings') }}" class="btn btn-secondary">Settings</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="dashboard-section">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+            <button class="btn btn-success">Download Attendance Template</button>
+            <button class="btn btn-info">Send Test Notification</button>
+            <button class="btn btn-warning">View System Status</button>
+        </div>
+    </section>
+</div>
+{% endblock %}

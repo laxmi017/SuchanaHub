@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Dashboard - SUCHANA HUB{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Teacher Dashboard</h1>
+    <p class="subtitle">Welcome, Teacher! Manage your classes and provide feedback.</p>
+
+    <!-- Quick Stats -->
+    <div class="stats-container">
+        <div class="stat-card stat-primary">
+            <div class="stat-icon">👥</div>
+            <h3>My Classes</h3>
+            <p class="stat-number">{{ stats.total_classes or 0 }}</p>
+        </div>
+        <div class="stat-card stat-success">
+            <div class="stat-icon">✅</div>
+            <h3>Present Today</h3>
+            <p class="stat-number">{{ stats.present_today or 0 }}</p>
+        </div>
+        <div class="stat-card stat-warning">
+            <div class="stat-icon">⏰</div>
+            <h3>Late Today</h3>
+            <p class="stat-number">{{ stats.late_today or 0 }}</p>
+        </div>
+        <div class="stat-card stat-danger">
+            <div class="stat-icon">❌</div>
+            <h3>Absent Today</h3>
+            <p class="stat-number">{{ stats.absent_today or 0 }}</p>
+        </div>
+    </div>
+
+    <!-- Teacher Functions -->
+    <section class="dashboard-section">
+        <h2>My Functions</h2>
+        <div class="menu-grid">
+            <!-- View Attendance -->
+            <div class="menu-card">
+                <div class="card-icon">📋</div>
+                <h3>View Attendance</h3>
+                <p>Check attendance records for your classes</p>
+                <a href="{{ url_for('view_attendance') }}" class="btn btn-secondary">View Attendance</a>
+            </div>
+
+            <!-- Provide Feedback -->
+            <div class="menu-card">
+                <div class="card-icon">💬</div>
+                <h3>Provide Feedback</h3>
+                <p>Give feedback on student performance and behavior</p>
+                <a href="{{ url_for('add_feedback') }}" class="btn btn-secondary">Add Feedback</a>
+            </div>
+
+            <!-- View Feedback -->
+            <div class="menu-card">
+                <div class="card-icon">📝</div>
+                <h3>My Feedback</h3>
+                <p>View feedback you have given to students</p>
+                <a href="{{ url_for('view_feedback') }}" class="btn btn-secondary">View My Feedback</a>
+            </div>
+
+            <!-- Notifications -->
+            <div class="menu-card">
+                <div class="card-icon">🔔</div>
+                <h3>Notifications Sent</h3>
+                <p>View notification logs for your classes</p>
+                <a href="{{ url_for('view_notifications') }}" class="btn btn-secondary">View Notifications</a>
+            </div>
+
+            <!-- Reports -->
+            <div class="menu-card">
+                <div class="card-icon">📊</div>
+                <h3>Attendance Reports</h3>
+                <p>Generate reports on student attendance</p>
+                <a href="{{ url_for('view_reports') }}" class="btn btn-secondary">View Reports</a>
+            </div>
+
+            <!-- Settings -->
+            <div class="menu-card">
+                <div class="card-icon">⚙️</div>
+                <h3>My Settings</h3>
+                <p>Update your profile and preferences</p>
+                <a href="{{ url_for('settings') }}" class="btn btn-secondary">Settings</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Today's Attendance Summary -->
+    <section class="dashboard-section">
+        <h2>Today's Attendance Summary</h2>
+        <div class="attendance-summary">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Total Students</th>
+                        <th>Present</th>
+                        <th>Late</th>
+                        <th>Absent</th>
+                        <th>Attendance %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="no-data">No attendance data available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

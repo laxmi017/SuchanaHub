@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Student Management - SUCHANA HUB{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h1>Student Management</h1>
+    <p class="page-subtitle">Manage student records and guardian information</p>
+
+    <!-- Action Buttons -->
+    <div class="action-bar">
+        <a href="{{ url_for('add_student') if 'add_student' in url_for._rules else '#' }}" class="btn btn-primary">
+            ➕ Add New Student
+        </a>
+        <input type="text" class="search-box" placeholder="Search students..." id="searchBox">
+    </div>
+
+    <!-- Students Table -->
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Roll No</th>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Class</th>
+                    <th>Guardian Name</th>
+                    <th>Guardian Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if students %}
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.roll_no }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.class_name }}</td>
+                        <td>{{ student.guardian_name }}</td>
+                        <td>{{ student.guardian_phone }}</td>
+                        <td class="action-buttons">
+                            <a href="{{ url_for('edit_student', student_id=student.id) if 'edit_student' in url_for._rules else '#' }}" class="btn btn-sm btn-info">Edit</a>
+                            <a href="{{ url_for('delete_student', student_id=student.id) if 'delete_student' in url_for._rules else '#' }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                            <a href="{{ url_for('view_student_attendance', student_id=student.id) if 'view_student_attendance' in url_for._rules else '#' }}" class="btn btn-sm btn-secondary">Attendance</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="no-data">No students found. <a href="{{ url_for('add_student') if 'add_student' in url_for._rules else '#' }}">Add one now</a></td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination (if needed) -->
+    <div class="pagination">
+        <button class="btn btn-sm">Previous</button>
+        <span class="page-info">Page 1 of 1</span>
+        <button class="btn btn-sm">Next</button>
+    </div>
+</div>
+
+<script>
+// Simple search functionality
+document.getElementById('searchBox').addEventListener('keyup', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const tableRows = document.querySelectorAll('.data-table tbody tr');
+    
+    tableRows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,33 @@
+# SUCHANA HUB - Python Requirements
+# All dependencies needed to run the application
+# Install with: pip install -r requirements.txt
+
+# Core Framework
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+Flask-Session==0.5.0
+
+# Database
+psycopg2-binary==2.9.7  # PostgreSQL adapter for Python
+SQLAlchemy==2.0.21
+
+# Security & Authentication
+Werkzeug==2.3.7  # For password hashing
+
+# Data Processing
+pandas==2.0.3  # For CSV/Excel processing
+openpyxl==3.1.2  # For Excel file support
+
+# Utilities
+python-dotenv==1.0.0  # For environment variables
+click==8.1.6  # For CLI commands
+
+# Optional (for production)
+# gunicorn==21.2.0  # Production WSGI server
+# flask-cors==4.0.0  # For API cross-origin requests
+# flask-compress==1.13  # Response compression
+
+# Development Tools (optional)
+# flask-debugtoolbar==0.14.1  # Debug toolbar
+# pytest==7.4.0  # Testing framework
+# black==23.9.0  # Code formatter

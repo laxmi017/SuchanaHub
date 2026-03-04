@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications - SUCHANA HUB{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h1>Notification Management</h1>
+    <p class="page-subtitle">View and manage guardian notifications</p>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-button active" onclick="showTab('notification-log')">Notification Log</button>
+        <button class="tab-button" onclick="showTab('send-notification')">Send Notification</button>
+        <button class="tab-button" onclick="showTab('notification-settings')">Settings</button>
+    </div>
+
+    <!-- Tab 1: Notification Log -->
+    <div id="notification-log" class="tab-content active">
+        <h2>Notification History</h2>
+        
+        <!-- Filters -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>Date Range:</label>
+                <input type="date" id="notifStartDate">
+                <span>to</span>
+                <input type="date" id="notifEndDate">
+            </div>
+            <div class="filter-group">
+                <label>Status:</label>
+                <select>
+                    <option value="">All Status</option>
+                    <option value="sent">Sent</option>
+                    <option value="pending">Pending</option>
+                    <option value="failed">Failed</option>
+                </select>
+            </div>
+            <button class="btn btn-primary">🔍 Filter</button>
+        </div>
+
+        <!-- Notifications Table -->
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Student Name</th>
+                        <th>Guardian Phone/Email</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if notifications %}
+                        {% for notif in notifications %}
+                        <tr>
+                            <td>{{ notif.created_at }}</td>
+                            <td>{{ notif.student_name }}</td>
+                            <td>{{ notif.guardian_contact }}</td>
+                            <td>{{ notif.message[:50] }}...</td>
+                            <td>
+                                <span class="badge badge-{{ notif.status.lower() }}">
+                                    {{ notif.status }}
+                                </span>
+                            </td>
+                            <td>{{ notif.notification_type }}</td>
+                            <td class="action-buttons">
+                                <a href="#" class="btn btn-sm btn-info">View</a>
+                                <a href="#" class="btn btn-sm btn-secondary">Resend</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="no-data">No notifications found</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tab 2: Send Notification -->
+    <div id="send-notification" class="tab-content">
+        <h2>Send Manual Notification</h2>
+        
+        <form method="POST" class="form-section">
+            <div class="form-group">
+                <label>Select Student:</label>
+                <select name="student_id" required class="form-control">
+                    <option value="">-- Select Student --</option>
+                    <option value="1">Raj Kumar (Roll: 001)</option>
+                    <option value="2">Priya Singh (Roll: 002)</option>
+                    <option value="3">Amit Patel (Roll: 003)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Guardian Contact:</label>
+                <input type="text" name="guardian_contact" placeholder="Phone or Email" required class="form-control" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Notification Type:</label>
+                <select name="notification_type" required class="form-control">
+                    <option value="">-- Select Type --</option>
+                    <option value="attendance_alert">Attendance Alert</option>
+                    <option value="performance_feedback">Performance Feedback</option>
+                    <option value="general_message">General Message</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Message:</label>
+                <textarea name="message" placeholder="Enter notification message" required class="form-control" rows="4"></textarea>
+                <p class="help-text">Character count: <span id="charCount">0</span>/500</p>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="send_sms" value="1"> Send SMS (if configured)
+                </label>
+                <label>
+                    <input type="checkbox" name="send_email" value="1" checked> Send Email
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg">📤 Send Notification</button>
+        </form>
+    </div>
+
+    <!-- Tab 3: Notification Settings -->
+    <div id="notification-settings" class="tab-content">
+        <h2>Notification Configuration</h2>
+        
+        <form method="POST" class="form-section">
+            <h3>Email Settings</h3>
+            <div class="form-group">
+                <label>Email Subject Template:</label>
+                <input type="text" value="Attendance Update - SUCHANA HUB" class="form-control">
+                <p class="help-text">Use [STUDENT_NAME], [DATE], [STATUS] as placeholders</p>
+            </div>
+
+            <h3>SMS Settings</h3>
+            <div class="form-group">
+                <label>SMS Gateway Provider:</label>
+                <select class="form-control">
+                    <option value="">-- Select Provider --</option>
+                    <option value="twilio">Twilio</option>
+                    <option value="aws">AWS SNS</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+
+            <h3>Notification Rules</h3>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" checked> Notify on Absent
+                </label>
+                <label>
+                    <input type="checkbox" checked> Notify on Late
+                </label>
+                <label>
+                    <input type="checkbox"> Notify on Present
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-success">💾 Save Settings</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function showTab(tabName) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// Character counter for message
+document.querySelector('[name="message"]')?.addEventListener('input', function(e) {
+    document.getElementById('charCount').textContent = e.target.value.length;
+});
+</script>
+{% endblock %}

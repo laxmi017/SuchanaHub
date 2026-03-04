@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance Management - SUCHANA HUB{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h1>Attendance Management</h1>
+    <p class="page-subtitle">View, manage, and process attendance records</p>
+
+    <!-- Tabs for different views -->
+    <div class="tabs">
+        <button class="tab-button active" onclick="showTab('view-attendance')">View Attendance</button>
+        <button class="tab-button" onclick="showTab('upload-attendance')">Upload Attendance</button>
+        <button class="tab-button" onclick="showTab('process-attendance')">Process Records</button>
+    </div>
+
+    <!-- Tab 1: View Attendance -->
+    <div id="view-attendance" class="tab-content active">
+        <h2>Attendance Records</h2>
+        
+        <!-- Filters -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>Date:</label>
+                <input type="date" id="attendanceDate">
+            </div>
+            <div class="filter-group">
+                <label>Class:</label>
+                <select id="classFilter">
+                    <option value="">All Classes</option>
+                    <option value="CS101">CS101</option>
+                    <option value="CS102">CS102</option>
+                    <option value="CS103">CS103</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Status:</label>
+                <select id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="present">Present</option>
+                    <option value="late">Late</option>
+                    <option value="absent">Absent</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="filterAttendance()">🔍 Apply Filters</button>
+        </div>
+
+        <!-- Attendance Table -->
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Check-in Time</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if attendance_records %}
+                        {% for record in attendance_records %}
+                        <tr class="status-{{ record.status.lower() }}">
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.student_id }}</td>
+                            <td>{{ record.student_name }}</td>
+                            <td>{{ record.class_name }}</td>
+                            <td>{{ record.check_in_time }}</td>
+                            <td>
+                                <span class="badge badge-{{ record.status.lower() }}">
+                                    {{ record.status }}
+                                </span>
+                            </td>
+                            <td>{{ record.notes or '-' }}</td>
+                            <td class="action-buttons">
+                                <a href="#" class="btn btn-sm btn-info">Edit</a>
+                                <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="no-data">No attendance records found</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tab 2: Upload Attendance -->
+    <div id="upload-attendance" class="tab-content">
+        <h2>Upload Attendance Data</h2>
+        <p class="instruction">Upload a CSV or Excel file containing student attendance data from biometric systems</p>
+        
+        <div class="upload-section">
+            <form method="POST" enctype="multipart/form-data" class="upload-form">
+                <div class="form-group">
+                    <label>Select File:</label>
+                    <input type="file" name="attendance_file" accept=".csv,.xlsx,.xls" required class="form-control">
+                    <p class="help-text">Supported formats: CSV, XLS, XLSX</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Date:</label>
+                    <input type="date" name="attendance_date" required class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Class:</label>
+                    <select name="class_id" required class="form-control">
+                        <option value="">Select Class</option>
+                        <option value="1">CS101</option>
+                        <option value="2">CS102</option>
+                        <option value="3">CS103</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Expected File Format:</label>
+                    <div class="format-info">
+                        <p>Your CSV should have these columns:</p>
+                        <ul>
+                            <li><strong>student_id</strong> - Student ID</li>
+                            <li><strong>roll_no</strong> - Roll Number</li>
+                            <li><strong>timestamp</strong> - Check-in time (HH:MM:SS)</li>
+                            <li><strong>name</strong> (optional) - Student name</li>
+                        </ul>
+                        <a href="#" class="btn btn-sm btn-info">📥 Download Template</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg">📤 Upload & Process</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tab 3: Process Records -->
+    <div id="process-attendance" class="tab-content">
+        <h2>Process Attendance Records</h2>
+        
+        <div class="process-section">
+            <div class="info-box">
+                <h3>Processing Configuration</h3>
+                <div class="form-group">
+                    <label>Cut-off Time (for marking Late):</label>
+                    <input type="time" id="cutoffTime" value="09:00" class="form-control">
+                    <p class="help-text">Students arriving after this time will be marked as Late</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Date Range:</label>
+                    <div class="date-range">
+                        <input type="date" id="startDate" placeholder="Start Date">
+                        <span>to</span>
+                        <input type="date" id="endDate" placeholder="End Date">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-lg" onclick="processAttendance()">⚙️ Process & Categorize</button>
+            </div>
+
+            <div class="processing-log">
+                <h3>Processing Log</h3>
+                <div class="log-content">
+                    <p>📝 No processing performed yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Tab switching functionality
+function showTab(tabName) {
+    // Hide all tabs
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    
+    // Remove active class from all buttons
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    // Show selected tab
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+}
+
+function filterAttendance() {
+    console.log('Filtering attendance...');
+}
+
+function processAttendance() {
+    console.log('Processing attendance records...');
+}
+</script>
+{% endblock %}

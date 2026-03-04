@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SUCHANA HUB - Attendance & Guardian Notification System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <h1>🎓 SUCHANA HUB</h1>
+                <p class="tagline">Smart Attendance & Guardian Notification System</p>
+            </div>
+            <ul class="navbar-menu">
+                {% if session.get('user_id') %}
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('settings') }}">Settings</a></li>
+                    <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout ({{ session.get('role', 'User').title() }})</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Alert Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 SUCHANA HUB - MCA Semester Project | All Rights Reserved</p>
+        <p>For Support: <a href="mailto:admin@suchanahub.com">admin@suchanahub.com</a></p>
+    </footer>
+
+    <!-- JavaScript for Flash Messages Auto-close -->
+    <script>
+        // Auto-close success messages after 5 seconds
+        function autoCloseAlerts() {
+            const alerts = document.querySelectorAll('.alert-success');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 5000);
+            });
+        }
+        window.onload = autoCloseAlerts;
+    </script>
+</body>
+</html>

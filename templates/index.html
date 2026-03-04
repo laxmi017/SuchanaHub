@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Home - SUCHANA HUB{% endblock %}
+
+{% block content %}
+<div class="home-page">
+    <!-- Welcome Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to SUCHANA HUB</h1>
+            <p>A Smart, Integrated Attendance & Guardian Notification System for Colleges</p>
+            <p class="description">
+                Streamline attendance management, automate guardian notifications, and generate comprehensive reports 
+                all in one unified platform.
+            </p>
+            
+            {% if not session.get('user_id') %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Get Started - Login Here</a>
+            {% else %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2>Key Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Multi-Role System</h3>
+                <p>Support for Admin, Teachers, and Staff with role-based dashboards</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Smart Attendance</h3>
+                <p>Process biometric data from CSV/Excel files with Present/Late/Absent logic</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Guardian Notifications</h3>
+                <p>Automatic notifications to parents/guardians about attendance status</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Feedback System</h3>
+                <p>Teachers can provide feedback on student performance and behavior</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Reports & Analytics</h3>
+                <p>Generate comprehensive reports for analysis and decision-making</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>Configurable Settings</h3>
+                <p>Customize cut-off times, notification templates, and system parameters</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <h2>How SUCHANA HUB Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h4>Upload Attendance Data</h4>
+                <p>Upload biometric attendance files (CSV/Excel format) to the system</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h4>Process & Categorize</h4>
+                <p>System automatically categorizes as Present/Late/Absent based on cut-off time</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h4>Notify Guardians</h4>
+                <p>Send automatic notifications to parents/guardians about attendance</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h4>Analyze & Report</h4>
+                <p>View detailed reports and analytics for better insights</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Requirements -->
+    <section class="requirements">
+        <h2>System Information</h2>
+        <div class="info-box">
+            <h3>Technology Stack</h3>
+            <ul>
+                <li><strong>Backend:</strong> Python Flask</li>
+                <li><strong>Database:</strong> PostgreSQL</li>
+                <li><strong>ORM:</strong> SQLAlchemy</li>
+                <li><strong>Frontend:</strong> HTML5 + CSS3</li>
+            </ul>
+        </div>
+    </section>
+</div>
+{% endblock %}

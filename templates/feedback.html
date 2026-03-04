@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback Management - SUCHANA HUB{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h1>Feedback Management</h1>
+    <p class="page-subtitle">Manage teacher feedback on student performance</p>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-button active" onclick="showTab('view-feedback')">View Feedback</button>
+        <button class="tab-button" onclick="showTab('add-feedback')">Add Feedback</button>
+    </div>
+
+    <!-- Tab 1: View Feedback -->
+    <div id="view-feedback" class="tab-content active">
+        <h2>Feedback Records</h2>
+        
+        <!-- Filters -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>Student:</label>
+                <select id="feedbackStudentFilter" class="form-control">
+                    <option value="">All Students</option>
+                    <option value="1">Raj Kumar</option>
+                    <option value="2">Priya Singh</option>
+                    <option value="3">Amit Patel</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Teacher:</label>
+                <select id="feedbackTeacherFilter" class="form-control">
+                    <option value="">All Teachers</option>
+                    <option value="1">Dr. John Smith</option>
+                    <option value="2">Prof. Emily Brown</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Category:</label>
+                <select id="feedbackCategoryFilter" class="form-control">
+                    <option value="">All Categories</option>
+                    <option value="academic">Academic Performance</option>
+                    <option value="behavior">Behavior</option>
+                    <option value="participation">Class Participation</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="filterFeedback()">🔍 Filter</button>
+        </div>
+
+        <!-- Feedback Table -->
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student Name</th>
+                        <th>Teacher Name</th>
+                        <th>Category</th>
+                        <th>Rating</th>
+                        <th>Comments</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if feedbacks %}
+                        {% for feedback in feedbacks %}
+                        <tr>
+                            <td>{{ feedback.created_at }}</td>
+                            <td>{{ feedback.student_name }}</td>
+                            <td>{{ feedback.teacher_name }}</td>
+                            <td>{{ feedback.category }}</td>
+                            <td class="rating">
+                                {% for i in range(feedback.rating) %}⭐{% endfor %}
+                                ({{ feedback.rating }}/5)
+                            </td>
+                            <td>{{ feedback.comments[:50] }}...</td>
+                            <td class="action-buttons">
+                                <a href="#" class="btn btn-sm btn-info">View</a>
+                                <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="no-data">No feedback records found</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tab 2: Add Feedback -->
+    <div id="add-feedback" class="tab-content">
+        <h2>Add New Feedback</h2>
+        
+        <form method="POST" action="{{ url_for('add_feedback') }}" class="form-section">
+            <div class="form-group">
+                <label>Student:</label>
+                <select name="student_id" required class="form-control">
+                    <option value="">-- Select Student --</option>
+                    <option value="1">Raj Kumar (Roll: 001)</option>
+                    <option value="2">Priya Singh (Roll: 002)</option>
+                    <option value="3">Amit Patel (Roll: 003)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Feedback Category:</label>
+                <select name="category" required class="form-control">
+                    <option value="">-- Select Category --</option>
+                    <option value="academic">Academic Performance</option>
+                    <option value="behavior">Behavior</option>
+                    <option value="participation">Class Participation</option>
+                    <option value="conduct">General Conduct</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Rating (1-5):</label>
+                <div class="rating-input">
+                    <input type="radio" name="rating" value="1" id="star1">
+                    <label for="star1">⭐</label>
+                    <input type="radio" name="rating" value="2" id="star2">
+                    <label for="star2">⭐⭐</label>
+                    <input type="radio" name="rating" value="3" id="star3" checked>
+                    <label for="star3">⭐⭐⭐</label>
+                    <input type="radio" name="rating" value="4" id="star4">
+                    <label for="star4">⭐⭐⭐⭐</label>
+                    <input type="radio" name="rating" value="5" id="star5">
+                    <label for="star5">⭐⭐⭐⭐⭐</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Comments:</label>
+                <textarea name="comments" placeholder="Provide detailed feedback..." required class="form-control" rows="5"></textarea>
+                <p class="help-text">Be constructive and specific. Include areas of strength and areas for improvement.</p>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="share_with_student" value="1" checked>
+                    Share this feedback with the student
+                </label>
+                <label>
+                    <input type="checkbox" name="share_with_guardian" value="1" checked>
+                    Share this feedback with guardian
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg">💾 Save Feedback</button>
+            <button type="reset" class="btn btn-secondary">Clear</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function showTab(tabName) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+}
+
+function filterFeedback() {
+    console.log('Filtering feedback...');
+}
+</script>
+{% endblock %}

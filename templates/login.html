@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Login - SUCHANA HUB{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        <h2>User Login</h2>
+        <p class="login-subtitle">Sign in to your account</p>
+        
+        <form method="POST" class="login-form">
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="username">Username or Email:</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    placeholder="Enter your username" 
+                    required
+                    class="form-control"
+                >
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="Enter your password" 
+                    required
+                    class="form-control"
+                >
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+
+        <!-- Demo Credentials Note -->
+        <div class="demo-info">
+            <h4>📝 Demo Credentials</h4>
+            <div class="credentials">
+                <p><strong>Admin:</strong> admin / admin123</p>
+                <p><strong>Teacher:</strong> teacher / teacher123</p>
+                <p><strong>Staff:</strong> staff / staff123</p>
+            </div>
+            <p class="note"><em>Note: These are default credentials for testing. Change them in production!</em></p>
+        </div>
+
+        <!-- Help Section -->
+        <div class="login-help">
+            <h4>❓ Need Help?</h4>
+            <p>Contact your system administrator for login credentials.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

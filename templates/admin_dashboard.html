@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - SUCHANA HUB{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Admin Dashboard</h1>
+    <p class="subtitle">Welcome, Admin! Manage all system functions here.</p>
+
+    <!-- Quick Stats -->
+    <div class="stats-container">
+        <div class="stat-card stat-primary">
+            <div class="stat-icon">👥</div>
+            <h3>Total Students</h3>
+            <p class="stat-number">{{ stats.total_students or 0 }}</p>
+        </div>
+        <div class="stat-card stat-success">
+            <div class="stat-icon">👨‍🏫</div>
+            <h3>Total Teachers</h3>
+            <p class="stat-number">{{ stats.total_teachers or 0 }}</p>
+        </div>
+        <div class="stat-card stat-info">
+            <div class="stat-icon">👨‍💼</div>
+            <h3>Total Staff</h3>
+            <p class="stat-number">{{ stats.total_staff or 0 }}</p>
+        </div>
+        <div class="stat-card stat-warning">
+            <div class="stat-icon">📊</div>
+            <h3>Total Attendance Records</h3>
+            <p class="stat-number">{{ stats.total_attendance or 0 }}</p>
+        </div>
+    </div>
+
+    <!-- Admin Functions Menu -->
+    <section class="dashboard-section">
+        <h2>System Management</h2>
+        <div class="menu-grid">
+            <!-- Student Management -->
+            <div class="menu-card">
+                <div class="card-icon">🎓</div>
+                <h3>Student Management</h3>
+                <p>Add, edit, view, and delete student records</p>
+                <a href="{{ url_for('view_students') }}" class="btn btn-secondary">Manage Students</a>
+            </div>
+
+            <!-- User Management -->
+            <div class="menu-card">
+                <div class="card-icon">🔐</div>
+                <h3>User Management</h3>
+                <p>Manage Admin, Teacher, and Staff accounts</p>
+                <a href="{{ url_for('manage_users') if 'manage_users' in url_for._rules else '#' }}" class="btn btn-secondary">Manage Users</a>
+            </div>
+
+            <!-- Attendance Processing -->
+            <div class="menu-card">
+                <div class="card-icon">📤</div>
+                <h3>Attendance Upload</h3>
+                <p>Upload and process attendance files (CSV/Excel)</p>
+                <a href="{{ url_for('attendance_upload') }}" class="btn btn-secondary">Upload Attendance</a>
+            </div>
+
+            <!-- View Attendance -->
+            <div class="menu-card">
+                <div class="card-icon">📋</div>
+                <h3>View Attendance</h3>
+                <p>View and manage attendance records</p>
+                <a href="{{ url_for('view_attendance') }}" class="btn btn-secondary">View Records</a>
+            </div>
+
+            <!-- Notifications Log -->
+            <div class="menu-card">
+                <div class="card-icon">🔔</div>
+                <h3>Notifications</h3>
+                <p>View logs of all sent notifications</p>
+                <a href="{{ url_for('view_notifications') }}" class="btn btn-secondary">Notification Logs</a>
+            </div>
+
+            <!-- Reports -->
+            <div class="menu-card">
+                <div class="card-icon">📊</div>
+                <h3>Reports & Analytics</h3>
+                <p>Generate and view system reports</p>
+                <a href="{{ url_for('view_reports') }}" class="btn btn-secondary">View Reports</a>
+            </div>
+
+            <!-- System Settings -->
+            <div class="menu-card">
+                <div class="card-icon">⚙️</div>
+                <h3>System Settings</h3>
+                <p>Configure attendance cut-off times and other parameters</p>
+                <a href="{{ url_for('settings') }}" class="btn btn-secondary">Settings</a>
+            </div>
+
+            <!-- Feedback -->
+            <div class="menu-card">
+                <div class="card-icon">💬</div>
+                <h3>Feedback</h3>
+                <p>View teacher feedback and manage feedback system</p>
+                <a href="{{ url_for('view_feedback') }}" class="btn btn-secondary">View Feedback</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="dashboard-section">
+        <h2>Recent Activity</h2>
+        <div class="activity-log">
+            <p class="no-data">No recent activity to display</p>
+        </div>
+    </section>
+</div>
+{% endblock %}
